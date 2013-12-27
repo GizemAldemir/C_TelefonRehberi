@@ -1,0 +1,1243 @@
+#include <stdio.h>
+#include <conio.h>
+#include <Windows.h>
+#include<string.h>
+int kullanici_no_kontrol(char kullanici_no[]);
+int kullanici_isim_kontrol(char isim[]);
+int kullanici_soyisim_kontrol(char soyisim[]);
+int mail_kontrol(char mail[]);
+int gun_kontrol(char gun[]);
+int ay_kontrol(char ay[]);
+int yil_kontrol(char yıl[]);
+int tel_kontrol(char tel[]);
+void kullanici_ekle();
+void kullanici_sil();
+void kullanici_guncelle();
+void kullanici_goruntule();
+void kullanici_ara();
+char number[]="1234567890";
+struct tarih
+{
+	int gun;
+	int ay;
+	int yıl;
+};
+struct adres
+{
+	char il[15];
+	char ilce[15];
+	char cadde[15];
+	char mahalle[15];
+	char sokak[10];
+	char aptno[6];
+	char apartman[15];
+};
+struct kullanici
+{
+	char kullanici_no[10];
+	char isim[15];
+	char soyisim[15];
+	char ev_telno[12];
+	char cep_telno[12];
+	char is_telno[12];
+	char mail[50];
+	struct tarih dogum;
+	struct adres kullanici_adres;
+};
+void main()
+{
+	int option;
+	
+	    printf("\n\n");
+	    printf("~~WELCOME THE SMART PHONEBOOK~~\n\n");
+		printf("Please wait. The system is loading...\n");
+		Sleep(3000);
+	do
+	{
+		
+		printf("******************MENU********************\n");
+		printf("|1-Add Contact                           |\n");
+		printf("|---------------------------------------|\n");
+		printf("|2-Delete Contact                        |\n");
+		printf("|---------------------------------------|\n");
+		printf("|3-Update Contacts                       |\n");
+		printf("|---------------------------------------|\n");
+		printf("|4-Display Contacts                      |\n");
+		printf("|---------------------------------------|\n");
+		printf("|5-Search Contact                        |\n");
+		printf("|---------------------------------------|\n");
+		printf("|6-Exit                                  |\n");
+		printf("******************************************\n\n");
+		printf("Your Choice: ");
+		scanf("%d",&option);
+
+		switch(option)
+		{
+		case 1:
+			kullanici_ekle();
+			break;
+
+		case 2:
+			kullanici_sil();
+			break;
+
+		case 3:
+			kullanici_guncelle();
+			break;
+
+		case 4:
+			kullanici_goruntule();
+			break;
+
+		case 5:
+			kullanici_ara();
+			break;
+
+		case 6:
+			printf("Thanks for choosing us.Hope to see you again...");
+			Sleep(1000);
+			break;
+		default:
+			printf("Upss.Wrong Choice! ... Try again!\n");
+		}
+		
+
+	}
+	while(option!=6 );
+	
+}
+int kullanici_no_kontrol(char kullanici_no[])
+{
+	int onaylama=0;
+	struct kullanici kullanicilar;
+	FILE *rehber;
+	rehber=fopen("phonebook.txt","r");
+	if(rehber==NULL)
+		printf("...FILE NOT FOUND!!!...");
+	else
+	{
+		while(fscanf(rehber,"%s\n",&kullanicilar.kullanici_no)!=EOF)
+		{
+			fgets(kullanicilar.isim,15,rehber);
+			kullanicilar.isim[strlen(kullanicilar.isim)-1]='\0';
+			fscanf(rehber, "%s\n%d\n%d\n%d\n%s\n%s\n%s\n" ,&kullanicilar.soyisim,&kullanicilar.dogum.gun,&kullanicilar.dogum.ay,&kullanicilar.dogum.yıl,&kullanicilar.is_telno,&kullanicilar.cep_telno,&kullanicilar.ev_telno);
+			fgets(kullanicilar.kullanici_adres.il,15,rehber);
+			kullanicilar.kullanici_adres.il[strlen(kullanicilar.kullanici_adres.il)-1]='\0';
+			fgets(kullanicilar.kullanici_adres.ilce,15,rehber);
+			kullanicilar.kullanici_adres.ilce[strlen(kullanicilar.kullanici_adres.ilce)-1]='\0';
+			fgets(kullanicilar.kullanici_adres.cadde,15,rehber);
+			kullanicilar.kullanici_adres.cadde[strlen(kullanicilar.kullanici_adres.cadde)-1]='\0';
+			fgets(kullanicilar.kullanici_adres.mahalle,15,rehber);
+			kullanicilar.kullanici_adres.mahalle[strlen(kullanicilar.kullanici_adres.mahalle)-1]='\0';
+			fgets(kullanicilar.kullanici_adres.sokak,15,rehber);
+			kullanicilar.kullanici_adres.sokak[strlen(kullanicilar.kullanici_adres.sokak)-1]='\0';
+			fscanf(rehber,"%s\n",&kullanicilar.kullanici_adres.aptno);
+			fgets(kullanicilar.kullanici_adres.apartman,15,rehber);
+			kullanicilar.kullanici_adres.apartman[strlen(kullanicilar.kullanici_adres.apartman)-1]='\0';
+			fscanf(rehber,"%s\n",kullanicilar.mail);
+			if(strcmp(kullanicilar.kullanici_no,kullanici_no)==0)
+			{
+				onaylama=1;
+				break;
+			}
+
+		}
+		fclose(rehber);
+	}
+	return onaylama;
+}
+int kullanici_isim_kontrol(char isim[])
+{
+	int onaylama=0;
+	struct kullanici kullanicilar;
+	FILE *rehber;
+	rehber=fopen("phonebook.txt","r");
+	if(rehber==NULL)
+		printf("...FILE NOT FOUND!!!...");
+	else
+	{
+		while(fscanf(rehber,"%s\n",&kullanicilar.kullanici_no)!=EOF)
+		{
+			fgets(kullanicilar.isim,15,rehber);
+			kullanicilar.isim[strlen(kullanicilar.isim)-1]='\0';
+			fscanf(rehber, "%s\n%d\n%d\n%d\n%s\n%s\n%s\n" ,&kullanicilar.soyisim,&kullanicilar.dogum.gun,&kullanicilar.dogum.ay,&kullanicilar.dogum.yıl,&kullanicilar.is_telno,&kullanicilar.cep_telno,&kullanicilar.ev_telno);
+			fgets(kullanicilar.kullanici_adres.il,15,rehber);
+			kullanicilar.kullanici_adres.il[strlen(kullanicilar.kullanici_adres.il)-1]='\0';
+			fgets(kullanicilar.kullanici_adres.ilce,15,rehber);
+			kullanicilar.kullanici_adres.ilce[strlen(kullanicilar.kullanici_adres.ilce)-1]='\0';
+			fgets(kullanicilar.kullanici_adres.cadde,15,rehber);
+			kullanicilar.kullanici_adres.cadde[strlen(kullanicilar.kullanici_adres.cadde)-1]='\0';
+			fgets(kullanicilar.kullanici_adres.mahalle,15,rehber);
+			kullanicilar.kullanici_adres.mahalle[strlen(kullanicilar.kullanici_adres.mahalle)-1]='\0';
+			fgets(kullanicilar.kullanici_adres.sokak,15,rehber);
+			kullanicilar.kullanici_adres.sokak[strlen(kullanicilar.kullanici_adres.sokak)-1]='\0';
+			fscanf(rehber,"%s\n",&kullanicilar.kullanici_adres.aptno);
+			fgets(kullanicilar.kullanici_adres.apartman,15,rehber);
+			kullanicilar.kullanici_adres.apartman[strlen(kullanicilar.kullanici_adres.apartman)-1]='\0';
+			fscanf(rehber,"%s\n",kullanicilar.mail);
+
+			if(strcmp(kullanicilar.isim,isim)==0)
+			{
+				onaylama=1;
+				break;
+			}
+
+		}
+		fclose(rehber);
+	}
+	return onaylama;
+}
+int kullanici_soyisim_kontrol(char soyisim[])
+{
+	int onaylama=0;
+	struct kullanici kullanicilar;
+	FILE *rehber;
+	rehber=fopen("phonebook.txt","r");
+	if(rehber==NULL)
+		printf("...FILE NOT FOUND!!!...");
+	else
+	{
+		while(fscanf(rehber,"%s\n",&kullanicilar.kullanici_no)!=EOF)
+		{
+			fgets(kullanicilar.isim,15,rehber);
+			kullanicilar.isim[strlen(kullanicilar.isim)-1]='\0';
+			fscanf(rehber, "%s\n%d\n%d\n%d\n%s\n%s\n%s\n" ,&kullanicilar.soyisim,&kullanicilar.dogum.gun,&kullanicilar.dogum.ay,&kullanicilar.dogum.yıl,&kullanicilar.is_telno,&kullanicilar.cep_telno,&kullanicilar.ev_telno);
+			fgets(kullanicilar.kullanici_adres.il,15,rehber);
+			kullanicilar.kullanici_adres.il[strlen(kullanicilar.kullanici_adres.il)-1]='\0';
+			fgets(kullanicilar.kullanici_adres.ilce,15,rehber);
+			kullanicilar.kullanici_adres.ilce[strlen(kullanicilar.kullanici_adres.ilce)-1]='\0';
+			fgets(kullanicilar.kullanici_adres.cadde,15,rehber);
+			kullanicilar.kullanici_adres.cadde[strlen(kullanicilar.kullanici_adres.cadde)-1]='\0';
+			fgets(kullanicilar.kullanici_adres.mahalle,15,rehber);
+			kullanicilar.kullanici_adres.mahalle[strlen(kullanicilar.kullanici_adres.mahalle)-1]='\0';
+			fgets(kullanicilar.kullanici_adres.sokak,15,rehber);
+			kullanicilar.kullanici_adres.sokak[strlen(kullanicilar.kullanici_adres.sokak)-1]='\0';
+			fscanf(rehber,"%s\n",&kullanicilar.kullanici_adres.aptno);
+			fgets(kullanicilar.kullanici_adres.apartman,15,rehber);
+			kullanicilar.kullanici_adres.apartman[strlen(kullanicilar.kullanici_adres.apartman)-1]='\0';
+			fscanf(rehber,"%s\n",kullanicilar.mail);
+
+			if(strcmp(kullanicilar.soyisim,soyisim)==0)
+			{
+				onaylama=1;
+				break;
+			}
+
+		}
+		fclose(rehber);
+	}
+	return onaylama;
+}
+int mail_kontrol(char mail[])//eger mail doğruysa 1 yanlissa 0 daha once kullanılmışsa 2 dondurur
+{
+	struct kullanici kullanicilar;
+	int onaylama=0;
+	for(int i=0; i<strlen(mail); i++)
+	{
+		if(mail[i]=='@')//@ olup olmadigini kontrol eder
+		{
+			for(int j=0; j<strlen(mail); j++)
+			{
+				if(mail[j]=='.' && (mail[j+1]=='c' && mail[j+2]=='o' && mail[j+3]=='m') || (mail[j+1]=='C' && mail[j+2]=='O' && mail[j+3]=='M') && mail[j+4]=='\0')//.com olup olmadigini kontrol eder
+				{
+					onaylama=1;
+				}
+			}
+		}
+	}
+	if(onaylama==1)
+	{
+		for(int i=0; i<strlen(mail); i++)
+		{
+			if(mail[i]==' ')//bosluk olup olmadigini kontrol eder
+			{
+				onaylama=0;
+				break;
+			}
+		}
+	}
+	FILE *rehber;
+	rehber=fopen("phonebook.txt","r");
+	if(rehber==NULL)
+	{
+		printf("...FILE NOT FOUND!!!...");
+	}
+	else
+	{
+		while(fscanf(rehber,"%s\n",&kullanicilar.kullanici_no)!=EOF)
+		{
+			fgets(kullanicilar.isim,15,rehber);
+			kullanicilar.isim[strlen(kullanicilar.isim)-1]='\0';
+			fscanf(rehber, "%s\n%d\n%d\n%d\n%s\n%s\n%s\n" ,&kullanicilar.soyisim,&kullanicilar.dogum.gun,&kullanicilar.dogum.ay,&kullanicilar.dogum.yıl,&kullanicilar.is_telno,&kullanicilar.cep_telno,&kullanicilar.ev_telno);
+			fgets(kullanicilar.kullanici_adres.il,15,rehber);
+			kullanicilar.kullanici_adres.il[strlen(kullanicilar.kullanici_adres.il)-1]='\0';
+			fgets(kullanicilar.kullanici_adres.ilce,15,rehber);
+			kullanicilar.kullanici_adres.ilce[strlen(kullanicilar.kullanici_adres.ilce)-1]='\0';
+			fgets(kullanicilar.kullanici_adres.cadde,15,rehber);
+			kullanicilar.kullanici_adres.cadde[strlen(kullanicilar.kullanici_adres.cadde)-1]='\0';
+			fgets(kullanicilar.kullanici_adres.mahalle,15,rehber);
+			kullanicilar.kullanici_adres.mahalle[strlen(kullanicilar.kullanici_adres.mahalle)-1]='\0';
+			fgets(kullanicilar.kullanici_adres.sokak,15,rehber);
+			kullanicilar.kullanici_adres.sokak[strlen(kullanicilar.kullanici_adres.sokak)-1]='\0';
+			fscanf(rehber,"%s\n",&kullanicilar.kullanici_adres.aptno);
+			fgets(kullanicilar.kullanici_adres.apartman,15,rehber);
+			kullanicilar.kullanici_adres.apartman[strlen(kullanicilar.kullanici_adres.apartman)-1]='\0';
+			fscanf(rehber,"%s\n",kullanicilar.mail);
+			if(strcmp(kullanicilar.mail,mail)==0)
+			{
+				onaylama=2;
+				break;
+			}
+		}
+		fclose(rehber);
+	}
+	return onaylama;
+}
+int gun_kontrol(char gun[])
+{
+	int tamam=0;
+	if(gun[2]=='\0' || gun[1]=='\0')//gunun bir yada iki basamakli oldugunu kontrol eder
+	{
+		tamam=1;
+	}
+	if(tamam==1)
+	{
+		for(int i=0; i<strlen(gun); i++)
+		{
+			for(int j=0; j<strlen(number); j++)
+			{
+				if(gun[i]==number[j])//gunun rakamlardan olustugunu kontrol eder
+				{
+					tamam=1;
+					break;
+				}
+				else
+				{
+					tamam=0;
+				}
+			}
+		}
+	}
+	if(tamam==1)
+	{
+		int gun1=atoi(gun);//char olan gunu int bir degere cevirir
+		if(gun1>0 && gun1<32)//gunun 1 ile 31 arasinda olustugunu kontrol eder
+		{
+			tamam=1;
+		}
+		else
+		{
+			tamam=0;
+		}
+	}
+	if(tamam==0)
+	{
+		printf("Incorrect Entry.Try again!\n");
+	}
+	return tamam;
+}
+int ay_kontrol(char ay[])//ay dogruysa 1 yanlissa 0 dondurur
+{
+	int tamam=0;
+	if(ay[2]=='\0' || ay[1]=='\0')//ayin bir yada iki basamakli oldugunu kontrol eder
+	{
+		tamam=1;
+	}
+	if(tamam==1)
+	{
+		for(int i=0; i<strlen(ay); i++)
+		{
+			for(int j=0; j<strlen(number); j++)
+			{
+				if(ay[i]==number[j])//ayin rakamlardan olustugunu kontrol eder
+				{
+					tamam=1;
+					break;
+				}
+				else
+				{
+					tamam=0;
+				}
+			}
+		}
+	}
+	if(tamam==1)
+	{
+		int ay1=atoi(ay);//char olan ayi int bir degere cevirir
+		if(ay1>0 && ay1<13)//ayin 1 ile 12 arasinda oldugunu kontrol eder
+		{
+			tamam=1;
+		}
+		else
+		{
+			tamam=0;
+		}
+	}
+	if(tamam==0)
+	{
+		printf("Incorrect Entry.Try again!\n");
+	}
+	return tamam;
+}
+int yil_kontrol(char yil[])//yil dogruysa 1 yanlissa 0 dondurur
+{
+	int tamam=0;
+	if(yil[4]=='\0')//yilin dort basamakli oldugunu kontrol eder
+	{
+		tamam=1;
+	}
+	if(tamam==1)
+	{
+		for(int i=0; i<4; i++)
+		{
+			for(int j=0; j<strlen(number); j++)
+			{
+				if(yil[i]==number[j])//yilin rakamlardan olustugunu kontrol eder
+				{
+					tamam=1;
+					break;
+				}
+				else
+				{
+					tamam=0;
+				}
+			}
+		}
+	}
+	if(tamam==1)
+	{
+		int yil1=atoi(yil);//char olan yili int bir degere cevirir
+		if(yil1>1930)//yilin 1930 dan daha kucuk olup olmadigini kontrol eder
+		{
+			tamam=1;
+		}
+		else
+		{
+			tamam=0;
+		}
+	}
+	if(tamam==0)
+	{
+		printf("Incorrect Entry.Try again!\n");
+	}
+	return tamam;
+}
+int tel_kontrol(char tel[],int tur)//tel dogruysa 1 yanlissa 0 daha once kayitli ise 2 dondurur
+{
+	struct kullanici kullanicilar;
+	int onaylama=0;
+	if(tel[0]=='0' && tel[1]!='0' && tel[11]=='\0')//telin ilk rakaminin 0, ikinci rakaminin 0 olmadigini ve 11 haneli oldugunu kontrol eder 
+	{
+		onaylama=1;
+	}
+	if(onaylama==1)
+	{
+		for(int i=0; i<strlen(tel); i++)
+		{
+			for(int j=0; j<strlen(tel); j++)
+			{
+				if(tel[i]==number[j])//telin sayilardan olustugunu kontrol eder
+				{
+					onaylama=1;
+					break;
+				}
+				else
+				{
+					onaylama=0;
+				}
+			}
+			if(onaylama==0)
+			{
+				break;
+			}
+		}
+	}
+	FILE *rehber;
+	rehber=fopen("phonebook.txt","r");
+	if(rehber==NULL)
+	{
+		printf("FILE NOT FOUND!..");
+	}
+	else
+	{
+		while(fscanf(rehber,"%s\n",&kullanicilar.kullanici_no)!=EOF)
+		{
+			fgets(kullanicilar.isim,15,rehber);
+			kullanicilar.isim[strlen(kullanicilar.isim)-1]='\0';
+			fscanf(rehber, "%s\n%d\n%d\n%d\n%s\n%s\n%s\n" ,&kullanicilar.soyisim,&kullanicilar.dogum.gun,&kullanicilar.dogum.ay,&kullanicilar.dogum.yıl,&kullanicilar.is_telno,&kullanicilar.cep_telno,&kullanicilar.ev_telno);
+			fgets(kullanicilar.kullanici_adres.il,15,rehber);
+			kullanicilar.kullanici_adres.il[strlen(kullanicilar.kullanici_adres.il)-1]='\0';
+			fgets(kullanicilar.kullanici_adres.ilce,15,rehber);
+			kullanicilar.kullanici_adres.ilce[strlen(kullanicilar.kullanici_adres.ilce)-1]='\0';
+			fgets(kullanicilar.kullanici_adres.cadde,15,rehber);
+			kullanicilar.kullanici_adres.cadde[strlen(kullanicilar.kullanici_adres.cadde)-1]='\0';
+			fgets(kullanicilar.kullanici_adres.mahalle,15,rehber);
+			kullanicilar.kullanici_adres.mahalle[strlen(kullanicilar.kullanici_adres.mahalle)-1]='\0';
+			fgets(kullanicilar.kullanici_adres.sokak,15,rehber);
+			kullanicilar.kullanici_adres.sokak[strlen(kullanicilar.kullanici_adres.sokak)-1]='\0';
+			fscanf(rehber,"%s\n",&kullanicilar.kullanici_adres.aptno);
+			fgets(kullanicilar.kullanici_adres.apartman,15,rehber);
+			kullanicilar.kullanici_adres.apartman[strlen(kullanicilar.kullanici_adres.apartman)-1]='\0';
+			fscanf(rehber,"%s\n",kullanicilar.mail);
+			if(tur==1)
+			{
+				if(strcmp(kullanicilar.is_telno,tel)==0)
+				{
+					onaylama=2;
+					break;
+				}
+			}
+			else if(tur==2)
+			{
+				if(strcmp(kullanicilar.cep_telno,tel)==0)
+				{
+					onaylama=2;
+					break;
+				}
+			}
+			else
+			{
+				if(strcmp(kullanicilar.ev_telno,tel)==0)
+				{
+					onaylama=2;
+					break;
+				}
+			}
+		}
+		fclose(rehber);
+	}
+	return onaylama;
+}
+void kullanici_ekle()
+{
+	struct kullanici kullanicilar;
+	char cevap='Y';
+	FILE *rehber;
+	rehber=fopen("phonebook.txt", "a");
+	if(rehber==NULL)
+		printf("...FILE NOT FOUND!!!...");
+	else
+	{
+		do
+		{
+			printf("Enter user ID: ");
+			_flushall();
+			gets(kullanicilar.kullanici_no);
+
+			if(kullanici_no_kontrol(kullanicilar.kullanici_no)==0)
+			{
+				printf("*** *** *** ***\n");
+				printf("Name: ");
+				_flushall();
+				gets(kullanicilar.isim);
+
+				printf("Surname: ");
+				_flushall();
+				gets(kullanicilar.soyisim);
+
+				printf("Birthday...\n");
+				char gun[3],ay[3],yıl[5];
+				do
+				{
+					printf("Day: ");
+					_flushall();
+					gets(gun);
+				}
+				while(gun_kontrol(gun)==0);
+				kullanicilar.dogum.gun=atoi(gun);
+				do
+				{
+					printf("Month: ");
+					_flushall();
+					gets(ay);
+				}
+				while(ay_kontrol(ay)==0);
+				kullanicilar.dogum.ay=atoi(ay);
+				do
+				{
+					printf("Year: ");
+					_flushall();
+					gets(yıl);
+				}
+				while(yil_kontrol(yıl)==0);
+				kullanicilar.dogum.yıl=atoi(yıl);
+				do
+				{
+					do
+					{
+						printf("Business Phone : ");
+						_flushall();
+						gets(kullanicilar.is_telno);
+						if(tel_kontrol(kullanicilar.is_telno,1)==2)
+						{
+							printf("This number has registered with another user!\n");
+						}
+					}
+					while(tel_kontrol(kullanicilar.is_telno,1)==2);
+					if(tel_kontrol(kullanicilar.is_telno,1)==0)
+					{
+						printf("Incorrct Entry.Try again!\n");
+					}
+				}
+				while(tel_kontrol(kullanicilar.is_telno,1)==0);
+
+				do
+				{
+					do
+					{
+						printf("Cell Phone : ");
+						_flushall();
+						gets(kullanicilar.cep_telno);
+						if(tel_kontrol(kullanicilar.cep_telno,2)==2)
+						{
+							printf("This number has registered with another user!\n");
+						}
+					}
+					while(tel_kontrol(kullanicilar.cep_telno,2)==2);
+					if(tel_kontrol(kullanicilar.cep_telno,2)==0)
+					{
+						printf("Incorrect Entry.Try again!\n");
+					}
+				}
+				while(tel_kontrol(kullanicilar.cep_telno,2)==0);
+
+				do
+				{
+					do
+					{
+						printf("Home Phone : ");
+						_flushall();
+						gets(kullanicilar.ev_telno);
+						if(tel_kontrol(kullanicilar.ev_telno,3)==2)
+						{
+							printf("This number has registered with another user!\n");
+						}
+					}
+					while(tel_kontrol(kullanicilar.ev_telno,3)==2);
+					if(tel_kontrol(kullanicilar.ev_telno,3)==0)
+					{
+						printf("Incorrect Entry.Try again!\n");
+					}
+				}
+				while(tel_kontrol(kullanicilar.ev_telno,3)==0);
+
+				printf("Address: \n");
+				printf("City: ");
+				_flushall();
+				gets(kullanicilar.kullanici_adres.il);
+
+				printf("County: ");
+				_flushall();
+				gets(kullanicilar.kullanici_adres.ilce);
+
+				printf("Avenue: ");
+				_flushall();
+				gets(kullanicilar.kullanici_adres.cadde);
+
+				printf("District: ");
+				_flushall();
+				gets(kullanicilar.kullanici_adres.mahalle);
+
+				printf("Street: ");
+				_flushall();
+				gets(kullanicilar.kullanici_adres.sokak);
+
+				printf("Block Number: ");
+				_flushall();
+				gets(kullanicilar.kullanici_adres.aptno);
+
+				printf("Block Name: ");
+				_flushall();
+				gets(kullanicilar.kullanici_adres.apartman);
+
+				do
+				{
+					do
+					{
+						printf("Mail Address: ");
+						_flushall();
+						gets(kullanicilar.mail);
+						if(mail_kontrol(kullanicilar.mail)==2)
+						{
+							printf("This mail address has registered with another user!\n");
+						}
+					}
+					while(mail_kontrol(kullanicilar.mail)==2);
+					if(mail_kontrol(kullanicilar.mail)==0)
+					{
+						printf("Incorrect Entry.Try again!\n");
+					}
+				}
+				while(mail_kontrol(kullanicilar.mail)==0);
+
+				fprintf(rehber,"%s\n%s\n%s\n%d\n%d\n%d\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n",kullanicilar.kullanici_no,kullanicilar.isim,kullanicilar.soyisim,kullanicilar.dogum.gun,kullanicilar.dogum.ay,kullanicilar.dogum.yıl,kullanicilar.is_telno,kullanicilar.cep_telno,
+					kullanicilar.ev_telno,kullanicilar.kullanici_adres.il,kullanicilar.kullanici_adres.ilce,kullanicilar.kullanici_adres.cadde,kullanicilar.kullanici_adres.mahalle,kullanicilar.kullanici_adres.sokak,kullanicilar.kullanici_adres.aptno,kullanicilar.kullanici_adres.apartman,kullanicilar.mail);
+				printf("Please loading...");
+				Sleep(2000);
+				printf("...The person is added...\n");
+				printf("Do you want to add another person? (***press Y or N***) ");
+				cevap=_getche();
+				printf("\n\n");
+			}
+
+			else
+			{
+				printf("In this region, there's another person.Please try again!...\n");
+			}
+		}
+		while(cevap!='n' && cevap!='N');
+	}
+	fclose(rehber);
+	printf("Press any key to back to menu... ");
+	_getch();
+	system("cls");
+}
+void kullanici_sil()
+{
+	struct kullanici kullanicilar;
+	char cevap='N';
+	char kullanicino[10];
+	FILE *rehber;
+	rehber=fopen("phonebook.txt", "r");
+
+	if(rehber==NULL)
+	{
+		printf("...FILE NOT FOUND!!!...");
+	}
+	else
+	{
+		printf("Enter the ID you want to delete: ");
+		_flushall();
+		gets(kullanicino);
+		if(kullanici_no_kontrol(kullanicino)==0)
+		{
+			printf("There is no such a person in the system.Try again!..");
+		}
+		else
+		{
+			printf("Are you sure you want to delete this person?(***Press Y or N***");
+			scanf("%c" ,&cevap);
+			if(cevap=='Y' | cevap=='y')
+			{
+				while(fscanf(rehber,"%s\n",&kullanicilar.kullanici_no)!=EOF)
+				{
+					fgets(kullanicilar.isim,15,rehber);
+					kullanicilar.isim[strlen(kullanicilar.isim)-1]='\0';
+					fscanf(rehber, "%s\n%d\n%d\n%d\n%s\n%s\n%s\n" ,&kullanicilar.soyisim,&kullanicilar.dogum.gun,&kullanicilar.dogum.ay,&kullanicilar.dogum.yıl,&kullanicilar.is_telno,&kullanicilar.cep_telno,&kullanicilar.ev_telno);
+					fgets(kullanicilar.kullanici_adres.il,15,rehber);
+					kullanicilar.kullanici_adres.il[strlen(kullanicilar.kullanici_adres.il)-1]='\0';
+					fgets(kullanicilar.kullanici_adres.ilce,15,rehber);
+					kullanicilar.kullanici_adres.ilce[strlen(kullanicilar.kullanici_adres.ilce)-1]='\0';
+					fgets(kullanicilar.kullanici_adres.cadde,15,rehber);
+					kullanicilar.kullanici_adres.cadde[strlen(kullanicilar.kullanici_adres.cadde)-1]='\0';
+					fgets(kullanicilar.kullanici_adres.mahalle,15,rehber);
+					kullanicilar.kullanici_adres.mahalle[strlen(kullanicilar.kullanici_adres.mahalle)-1]='\0';
+					fgets(kullanicilar.kullanici_adres.sokak,15,rehber);
+					kullanicilar.kullanici_adres.sokak[strlen(kullanicilar.kullanici_adres.sokak)-1]='\0';
+					fscanf(rehber,"%s\n",&kullanicilar.kullanici_adres.aptno);
+					fgets(kullanicilar.kullanici_adres.apartman,15,rehber);
+					kullanicilar.kullanici_adres.apartman[strlen(kullanicilar.kullanici_adres.apartman)-1]='\0';
+					fscanf(rehber,"%s\n",kullanicilar.mail);
+
+					FILE *temp;
+					temp=fopen("tempfile.txt", "a");
+					if(temp==NULL)
+					{
+						printf("..FILE NOT FOUND!..\n");
+					}
+					else
+					{
+						if(strcmp(kullanicilar.kullanici_no,kullanicino)!=0)
+						{
+							fprintf(temp,"%s\n%s\n%s\n%d\n%d\n%d\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n",kullanicilar.kullanici_no,kullanicilar.isim,kullanicilar.soyisim,kullanicilar.dogum.gun,kullanicilar.dogum.ay,kullanicilar.dogum.yıl,kullanicilar.is_telno,kullanicilar.cep_telno,
+							kullanicilar.ev_telno,kullanicilar.kullanici_adres.il,kullanicilar.kullanici_adres.ilce,kullanicilar.kullanici_adres.cadde,kullanicilar.kullanici_adres.mahalle,kullanicilar.kullanici_adres.sokak,kullanicilar.kullanici_adres.aptno,kullanicilar.kullanici_adres.apartman,kullanicilar.mail);
+						}
+						fclose(temp);
+					}
+				}
+				fclose(rehber);
+				remove("phonebook.txt");
+				rename("tempfile.txt","phonebook.txt");
+				printf("Deletion was completed...\n");
+			}
+
+		}
+	}
+	  printf("Press any key to back to menu... ");
+	  _getch();
+	  system("cls");
+}
+void kullanici_guncelle()
+{
+	char kullanicino[10];
+	printf("Enter ID you want to update: ");
+	_flushall();
+	gets(kullanicino);
+	if(kullanici_no_kontrol(kullanicino)==0)
+	{
+		printf("There is no such a person in the system.Try again!..\n");
+	}
+	else
+	{
+		struct kullanici kullanicilar[BUFSIZ];
+		int option, N=0;
+		FILE *rehber;
+		rehber=fopen("phonebook.txt","r");
+		if(rehber==NULL)
+		{
+			printf("FILE NOT FOUND!..\n");
+		}
+		else
+		{
+			while(fscanf(rehber,"%s\n",&kullanicilar[N].kullanici_no)!=EOF)
+			{
+				fgets(kullanicilar[N].isim,15,rehber);
+				kullanicilar[N].isim[strlen(kullanicilar[N].isim)-1]='\0';
+				fscanf(rehber, "%s\n%d\n%d\n%d\n%s\n%s\n%s\n" ,&kullanicilar[N].soyisim,&kullanicilar[N].dogum.gun,&kullanicilar[N].dogum.ay,&kullanicilar[N].dogum.yıl,&kullanicilar[N].is_telno,&kullanicilar[N].cep_telno,&kullanicilar[N].ev_telno);
+				fgets(kullanicilar[N].kullanici_adres.il,15,rehber);
+				kullanicilar[N].kullanici_adres.il[strlen(kullanicilar[N].kullanici_adres.il)-1]='\0';
+				fgets(kullanicilar[N].kullanici_adres.ilce,15,rehber);
+				kullanicilar[N].kullanici_adres.ilce[strlen(kullanicilar[N].kullanici_adres.ilce)-1]='\0';
+				fgets(kullanicilar[N].kullanici_adres.cadde,15,rehber);
+				kullanicilar[N].kullanici_adres.cadde[strlen(kullanicilar[N].kullanici_adres.cadde)-1]='\0';
+				fgets(kullanicilar[N].kullanici_adres.mahalle,15,rehber);
+				kullanicilar[N].kullanici_adres.mahalle[strlen(kullanicilar[N].kullanici_adres.mahalle)-1]='\0';
+				fgets(kullanicilar[N].kullanici_adres.sokak,15,rehber);
+				kullanicilar[N].kullanici_adres.sokak[strlen(kullanicilar[N].kullanici_adres.sokak)-1]='\0';
+				fscanf(rehber,"%s\n",&kullanicilar[N].kullanici_adres.aptno);
+				fgets(kullanicilar[N].kullanici_adres.apartman,15,rehber);
+				kullanicilar[N].kullanici_adres.apartman[strlen(kullanicilar[N].kullanici_adres.apartman)-1]='\0';
+				fscanf(rehber,"%s\n",kullanicilar[N].mail);
+				N++;
+			}
+			printf("Choose the section you want to update...\n");
+			printf("1-Name\n");
+			printf("2-Surname\n");
+			printf("3-Cellphone\n");
+			printf("4-Business Phone\n");
+			printf("5-Home Phone\n");
+			printf("6-Birthday\n");
+			printf("7-Mail Address\n");
+			printf("8-Address\n");
+			printf("Enter your option:");
+			scanf("%d",&option);
+			for (int i = 0; i <N; i++)
+			{
+				FILE *temp;
+				temp=fopen("tempfile.txt","a");
+				if(temp==NULL)
+				{
+					printf("FILE NOT FOUND!...");
+				}
+				else
+				{
+					if(strcmp(kullanicilar[i].kullanici_no,kullanicino)==0)
+					{
+						if(option==1)
+						{
+							printf("Enter new name: ");
+							_flushall();
+							gets(kullanicilar[i].isim);
+						}
+						else if(option==2)
+						{
+							printf("Enter new surname: ");
+							_flushall();
+							gets(kullanicilar[i].soyisim);
+						}
+						else if(option==3)
+						{
+							do
+							{
+								do
+								{
+									printf("Cell Phone : ");
+									_flushall();
+									gets(kullanicilar[i].cep_telno);
+									if(tel_kontrol(kullanicilar[i].cep_telno,2)==2)
+									{
+										printf("This number has registered with another user!!\n");
+									}
+								}
+								while(tel_kontrol(kullanicilar[i].cep_telno,2)==2);
+								if(tel_kontrol(kullanicilar[i].cep_telno,2)==0)
+								{
+									printf("Wrong Choice.Try again!\n");
+								}
+							}
+							while(tel_kontrol(kullanicilar[i].cep_telno,2)==0);
+						}
+						else if(option==4)
+						{
+							do
+							{
+								do
+								{
+									printf("Business Phone : ");
+									_flushall();
+									gets(kullanicilar[i].is_telno);
+									if(tel_kontrol(kullanicilar[i].is_telno,1)==2)
+									{
+										printf("This number has registered with another user!!\n");
+									}
+								}
+								while(tel_kontrol(kullanicilar[i].is_telno,1)==2);
+								if(tel_kontrol(kullanicilar[i].is_telno,1)==0)
+								{
+									printf("Wrong Choice.Try again!\n");
+								}
+							}
+							while(tel_kontrol(kullanicilar[i].is_telno,1)==0);
+						}
+						else if(option==5)
+						{
+							do
+							{
+								do
+								{
+									printf("Home Phone : ");
+									_flushall();
+									gets(kullanicilar[i].ev_telno);
+									if(tel_kontrol(kullanicilar[i].ev_telno,3)==2)
+									{
+										printf("This number has registered with another user!\n");
+									}
+								}
+								while(tel_kontrol(kullanicilar[i].ev_telno,3)==2);
+								if(tel_kontrol(kullanicilar[i].ev_telno,3)==0)
+								{
+									printf("Wrong Choice.Try again!\n");
+								}
+							}
+							while(tel_kontrol(kullanicilar[i].ev_telno,3)==0);
+						}
+						else if(option==6)
+						{
+							printf("Enter new birthday date:\n");
+							char gun[3],ay[3],yıl[5];
+							do
+							{
+								printf("Day: ");
+								_flushall();
+								gets(gun);
+							}
+							while(gun_kontrol(gun)==0);
+							kullanicilar[i].dogum.gun=atoi(gun);
+							do
+							{
+								printf("Month: ");
+								_flushall();
+								gets(ay);
+							}
+							while(ay_kontrol(ay)==0);
+							kullanicilar[i].dogum.ay=atoi(ay);
+							do
+							{
+								printf("Year: ");
+								_flushall();
+								gets(yıl);
+							}
+							while(yil_kontrol(yıl)==0);
+							kullanicilar[i].dogum.yıl=atoi(yıl);
+						}
+						else if(option==7)
+						{
+							do
+							{
+								do
+								{
+									printf("New mail Address: ");
+									_flushall();
+									gets(kullanicilar[i].mail);
+									if(mail_kontrol(kullanicilar[i].mail)==2)
+									{
+										printf("This number has registered with another user!!\n");
+									}
+								}
+								while(mail_kontrol(kullanicilar[i].mail)==2);
+								if(mail_kontrol(kullanicilar[i].mail)==0)
+								{
+									printf("Incorrect entry.Try again!\n");
+								}
+							}
+							while(mail_kontrol(kullanicilar[i].mail)==0);
+						}
+						else if(option==8)
+						{
+							printf("Enter new address:");
+							printf("New city:");
+							_flushall();
+							gets(kullanicilar[i].kullanici_adres.il);
+							printf("New county:");
+							_flushall();
+							gets(kullanicilar[i].kullanici_adres.ilce);
+							printf("New avenue:");
+							_flushall();
+							gets(kullanicilar[i].kullanici_adres.cadde);
+							printf("New discrit:");
+							_flushall();
+							gets(kullanicilar[i].kullanici_adres.mahalle);
+							printf("New street:");
+							_flushall();
+							gets(kullanicilar[i].kullanici_adres.sokak);
+							printf("Block number:");
+							_flushall();
+							gets(kullanicilar[i].kullanici_adres.aptno);
+							printf("Block name:");
+							_flushall();
+							gets(kullanicilar[i].kullanici_adres.apartman);
+						}
+						else
+						{
+							printf("You enter a wrong number.Try again!..");
+						}
+						fprintf(temp,"%s\n%s\n%s\n%d\n%d\n%d\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n",kullanicilar[i].kullanici_no,kullanicilar[i].isim,kullanicilar[i].soyisim,kullanicilar[i].dogum.gun,kullanicilar[i].dogum.ay,kullanicilar[i].dogum.yıl,kullanicilar[i].is_telno,kullanicilar[i].cep_telno,
+						kullanicilar[i].ev_telno,kullanicilar[i].kullanici_adres.il,kullanicilar[i].kullanici_adres.ilce,kullanicilar[i].kullanici_adres.cadde,kullanicilar[i].kullanici_adres.mahalle,kullanicilar[i].kullanici_adres.sokak,kullanicilar[i].kullanici_adres.aptno,kullanicilar[i].kullanici_adres.apartman,kullanicilar[i].mail);
+					}
+                    else
+					{
+						fprintf(temp,"%s\n%s\n%s\n%d\n%d\n%d\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n",kullanicilar[i].kullanici_no,kullanicilar[i].isim,kullanicilar[i].soyisim,kullanicilar[i].dogum.gun,kullanicilar[i].dogum.ay,kullanicilar[i].dogum.yıl,kullanicilar[i].is_telno,kullanicilar[i].cep_telno,
+						kullanicilar[i].ev_telno,kullanicilar[i].kullanici_adres.il,kullanicilar[i].kullanici_adres.ilce,kullanicilar[i].kullanici_adres.cadde,kullanicilar[i].kullanici_adres.mahalle,kullanicilar[i].kullanici_adres.sokak,kullanicilar[i].kullanici_adres.aptno,kullanicilar[i].kullanici_adres.apartman,kullanicilar[i].mail);
+					}
+					fclose(temp);
+				}
+			}
+		}
+		fclose(rehber);
+		remove("phonebook.txt");
+		rename("tempfile.txt","phonebook.txt");
+		printf("Update was completed...");
+	}
+	printf("Press any key to back to menu... ");
+	_getch();
+	system("cls");
+}
+void kullanici_goruntule()
+{
+	struct kullanici kullanicilar;
+	FILE *rehber;
+	rehber=fopen("phonebook.txt","r");
+	if(rehber==NULL)
+	{
+		printf("FILE NOT FOUND!..");
+	}
+	else
+	{
+		printf("||~~~~~~||~~~~~~~~~~~~||~~~~~~~~~~~~~~~~||~~~~~~~~~~~~||~~~~~~~~~~~~~~||~~~~~~~~~~~~~~~~||~~~~~~~~~~~~~~||~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~||~~~~~~~~~~~~~~||~~~~~~~~~~~~~~||~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~||\n");
+		printf("||  ID  ||    NAME    ||    SURNAME     ||  BIRTHDAY  ||  CELLPHONE   || BUSINESS PHONE ||  HOME PHONE  ||          MAIL ADDRESS          ||     CITY     ||    COUNTY    ||                           ADDRESS DETAILS                            ||\n");
+		printf("||~~~~~~||~~~~~~~~~~~~||~~~~~~~~~~~~~~~~||~~~~~~~~~~~~||~~~~~~~~~~~~~~||~~~~~~~~~~~~~~~~||~~~~~~~~~~~~~~||~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~||~~~~~~~~~~~~~~||~~~~~~~~~~~~~~||~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~||\n");
+         
+		while(fscanf(rehber,"%s\n",&kullanicilar.kullanici_no)!=EOF)
+		{
+			fgets(kullanicilar.isim,15,rehber);
+			kullanicilar.isim[strlen(kullanicilar.isim)-1]='\0';
+			fscanf(rehber, "%s\n%d\n%d\n%d\n%s\n%s\n%s\n" ,&kullanicilar.soyisim,&kullanicilar.dogum.gun,&kullanicilar.dogum.ay,&kullanicilar.dogum.yıl,&kullanicilar.is_telno,&kullanicilar.cep_telno,&kullanicilar.ev_telno);
+			fgets(kullanicilar.kullanici_adres.il,15,rehber);
+			kullanicilar.kullanici_adres.il[strlen(kullanicilar.kullanici_adres.il)-1]='\0';
+			fgets(kullanicilar.kullanici_adres.ilce,15,rehber);
+			kullanicilar.kullanici_adres.ilce[strlen(kullanicilar.kullanici_adres.ilce)-1]='\0';
+			fgets(kullanicilar.kullanici_adres.cadde,15,rehber);
+			kullanicilar.kullanici_adres.cadde[strlen(kullanicilar.kullanici_adres.cadde)-1]='\0';
+			fgets(kullanicilar.kullanici_adres.mahalle,15,rehber);
+			kullanicilar.kullanici_adres.mahalle[strlen(kullanicilar.kullanici_adres.mahalle)-1]='\0';
+			fgets(kullanicilar.kullanici_adres.sokak,15,rehber);
+			kullanicilar.kullanici_adres.sokak[strlen(kullanicilar.kullanici_adres.sokak)-1]='\0';
+			fscanf(rehber,"%s\n",&kullanicilar.kullanici_adres.aptno);
+			fgets(kullanicilar.kullanici_adres.apartman,15,rehber);
+			kullanicilar.kullanici_adres.apartman[strlen(kullanicilar.kullanici_adres.apartman)-1]='\0';
+			fscanf(rehber,"%s\n",kullanicilar.mail);
+			printf("||%5s ||%11s ||%15s || %2d/%2d/%4d || %12s || %13s  ||%13s ||%31s ||%13s ||%13s || %s %s %s %s %s\n",kullanicilar.kullanici_no,kullanicilar.isim,kullanicilar.soyisim,kullanicilar.dogum.gun,kullanicilar.dogum.ay,kullanicilar.dogum.yıl,kullanicilar.cep_telno,kullanicilar.is_telno,kullanicilar.ev_telno,
+				kullanicilar.mail,kullanicilar.kullanici_adres.il,kullanicilar.kullanici_adres.ilce,kullanicilar.kullanici_adres.cadde,kullanicilar.kullanici_adres.mahalle,kullanicilar.kullanici_adres.sokak,kullanicilar.kullanici_adres.aptno,kullanicilar.kullanici_adres.apartman);
+			printf("||~~~~~~||~~~~~~~~~~~~||~~~~~~~~~~~~~~~~||~~~~~~~~~~~~||~~~~~~~~~~~~~~||~~~~~~~~~~~~~~~~||~~~~~~~~~~~~~~||~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~||~~~~~~~~~~~~~~||~~~~~~~~~~~~~~||~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~||\n");
+		}
+		printf("\n\n");
+		fclose(rehber);
+	}
+	printf("Press any key to back to menu... ");
+	  _getch();
+	  system("cls");
+}
+void kullanici_ara()
+{
+	struct kullanici kullanicilar;
+	int option;
+	printf("|************************\n");
+	printf("|1-Sorted by name       |\n");
+	printf("|2-Sorted by surname    |\n");
+	printf("|3-Sorted by ID         |\n");
+	printf("*************************\n");
+	printf("What is your choice?");
+	scanf("%d",&option);
+	if(option==1)
+	{
+		char isim[20];
+		FILE *rehber;
+		rehber=fopen("phonebook.txt","r");
+		if(rehber==NULL)
+		{
+			printf("FILE NOT FOUND!..");
+		}
+		else
+		{
+			printf("Enter the name of the person you want to search: ");
+			_flushall();
+			gets(isim);
+			if(kullanici_isim_kontrol(isim)==0)
+			{
+				printf("There is no person who is registered with this name!..");
+			}
+			else
+			{
+				printf("||~~~~~~||~~~~~~~~~~~~||~~~~~~~~~~~~~~~~||~~~~~~~~~~~~||~~~~~~~~~~~~~~||~~~~~~~~~~~~~~~~||~~~~~~~~~~~~~~||~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~||~~~~~~~~~~~~~~||~~~~~~~~~~~~~~||~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~||\n");
+				printf("||  ID  ||    NAME    ||    SURNAME     ||  BIRTHDAY  ||  CELLPHONE   || BUSINESS PHONE ||  HOME PHONE  ||          MAIL ADDRESS          ||     CITY     ||    COUNTY    ||                           ADDRESS DETAILS                            ||\n");
+				printf("||~~~~~~||~~~~~~~~~~~~||~~~~~~~~~~~~~~~~||~~~~~~~~~~~~||~~~~~~~~~~~~~~||~~~~~~~~~~~~~~~~||~~~~~~~~~~~~~~||~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~||~~~~~~~~~~~~~~||~~~~~~~~~~~~~~||~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~||\n");
+				while(fscanf(rehber,"%s\n",&kullanicilar.kullanici_no)!=EOF)
+				{
+					fgets(kullanicilar.isim,15,rehber);
+					kullanicilar.isim[strlen(kullanicilar.isim)-1]='\0';
+					fscanf(rehber, "%s\n%d\n%d\n%d\n%s\n%s\n%s\n" ,&kullanicilar.soyisim,&kullanicilar.dogum.gun,&kullanicilar.dogum.ay,&kullanicilar.dogum.yıl,&kullanicilar.is_telno,&kullanicilar.cep_telno,&kullanicilar.ev_telno);
+					fgets(kullanicilar.kullanici_adres.il,15,rehber);
+					kullanicilar.kullanici_adres.il[strlen(kullanicilar.kullanici_adres.il)-1]='\0';
+					fgets(kullanicilar.kullanici_adres.ilce,15,rehber);
+					kullanicilar.kullanici_adres.ilce[strlen(kullanicilar.kullanici_adres.ilce)-1]='\0';
+					fgets(kullanicilar.kullanici_adres.cadde,15,rehber);
+					kullanicilar.kullanici_adres.cadde[strlen(kullanicilar.kullanici_adres.cadde)-1]='\0';
+					fgets(kullanicilar.kullanici_adres.mahalle,15,rehber);
+					kullanicilar.kullanici_adres.mahalle[strlen(kullanicilar.kullanici_adres.mahalle)-1]='\0';
+					fgets(kullanicilar.kullanici_adres.sokak,15,rehber);
+					kullanicilar.kullanici_adres.sokak[strlen(kullanicilar.kullanici_adres.sokak)-1]='\0';
+					fscanf(rehber,"%s\n",&kullanicilar.kullanici_adres.aptno);
+					fgets(kullanicilar.kullanici_adres.apartman,15,rehber);
+					kullanicilar.kullanici_adres.apartman[strlen(kullanicilar.kullanici_adres.apartman)-1]='\0';
+					fscanf(rehber,"%s\n",kullanicilar.mail);
+					if(strcmp(kullanicilar.isim,isim)==0)
+					{
+						printf("||%5s ||%11s ||%15s || %2d/%2d/%4d || %12s || %13s  ||%13s ||%31s ||%13s ||%13s || %s %s %s %s %s\n",kullanicilar.kullanici_no,kullanicilar.isim,kullanicilar.soyisim,kullanicilar.dogum.gun,kullanicilar.dogum.ay,kullanicilar.dogum.yıl,kullanicilar.cep_telno,kullanicilar.is_telno,kullanicilar.ev_telno,
+						kullanicilar.mail,kullanicilar.kullanici_adres.il,kullanicilar.kullanici_adres.ilce,kullanicilar.kullanici_adres.cadde,kullanicilar.kullanici_adres.mahalle,kullanicilar.kullanici_adres.sokak,kullanicilar.kullanici_adres.aptno,kullanicilar.kullanici_adres.apartman);
+						printf("||~~~~~~||~~~~~~~~~~~~||~~~~~~~~~~~~~~~~||~~~~~~~~~~~~||~~~~~~~~~~~~~~||~~~~~~~~~~~~~~~~||~~~~~~~~~~~~~~||~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~||~~~~~~~~~~~~~~||~~~~~~~~~~~~~~||~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~||\n");
+				    }
+			    } 
+			}
+			fclose(rehber);
+		}
+        printf("Press any key to back to menu... ");
+	    _getch();
+	    system("cls");
+	}
+	else if(option==2)
+	{
+		char soyisim[20];
+		FILE *rehber;
+		rehber=fopen("phonebook.txt","r");
+		if(rehber==NULL)
+		{
+			printf("FILE NOT FOUND!..");
+		}
+		else
+		{
+			printf("Enter the surname of the person you want to search: ");
+			_flushall();
+			gets(soyisim);
+			if(kullanici_soyisim_kontrol(soyisim)==0)
+			{
+				printf("There is no person who is registered with this name!..");
+			}
+			else
+			{
+				printf("||~~~~~~||~~~~~~~~~~~~||~~~~~~~~~~~~~~~~||~~~~~~~~~~~~||~~~~~~~~~~~~~~||~~~~~~~~~~~~~~~~||~~~~~~~~~~~~~~||~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~||~~~~~~~~~~~~~~||~~~~~~~~~~~~~~||~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~||\n");
+				printf("||  ID  ||    NAME    ||    SURNAME     ||  BIRTHDAY  ||  CELLPHONE   || BUSINESS PHONE ||  HOME PHONE  ||          MAIL ADDRESS          ||     CITY     ||    COUNTY    ||                           ADDRESS DETAILS                            ||\n");
+				printf("||~~~~~~||~~~~~~~~~~~~||~~~~~~~~~~~~~~~~||~~~~~~~~~~~~||~~~~~~~~~~~~~~||~~~~~~~~~~~~~~~~||~~~~~~~~~~~~~~||~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~||~~~~~~~~~~~~~~||~~~~~~~~~~~~~~||~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~||\n");
+				while(fscanf(rehber,"%s\n",&kullanicilar.kullanici_no)!=EOF)
+				{
+					fgets(kullanicilar.isim,15,rehber);
+					kullanicilar.isim[strlen(kullanicilar.isim)-1]='\0';
+					fscanf(rehber, "%s\n%d\n%d\n%d\n%s\n%s\n%s\n" ,&kullanicilar.soyisim,&kullanicilar.dogum.gun,&kullanicilar.dogum.ay,&kullanicilar.dogum.yıl,&kullanicilar.is_telno,&kullanicilar.cep_telno,&kullanicilar.ev_telno);
+					fgets(kullanicilar.kullanici_adres.il,15,rehber);
+					kullanicilar.kullanici_adres.il[strlen(kullanicilar.kullanici_adres.il)-1]='\0';
+					fgets(kullanicilar.kullanici_adres.ilce,15,rehber);
+					kullanicilar.kullanici_adres.ilce[strlen(kullanicilar.kullanici_adres.ilce)-1]='\0';
+					fgets(kullanicilar.kullanici_adres.cadde,15,rehber);
+					kullanicilar.kullanici_adres.cadde[strlen(kullanicilar.kullanici_adres.cadde)-1]='\0';
+					fgets(kullanicilar.kullanici_adres.mahalle,15,rehber);
+					kullanicilar.kullanici_adres.mahalle[strlen(kullanicilar.kullanici_adres.mahalle)-1]='\0';
+					fgets(kullanicilar.kullanici_adres.sokak,15,rehber);
+					kullanicilar.kullanici_adres.sokak[strlen(kullanicilar.kullanici_adres.sokak)-1]='\0';
+					fscanf(rehber,"%s\n",&kullanicilar.kullanici_adres.aptno);
+					fgets(kullanicilar.kullanici_adres.apartman,15,rehber);
+					kullanicilar.kullanici_adres.apartman[strlen(kullanicilar.kullanici_adres.apartman)-1]='\0';
+					fscanf(rehber,"%s\n",kullanicilar.mail);
+					if(strcmp(kullanicilar.soyisim,soyisim)==0)
+					{
+						printf("||%5s ||%11s ||%15s || %2d/%2d/%4d || %12s || %13s  ||%13s ||%31s ||%13s ||%13s || %s %s %s %s %s\n",kullanicilar.kullanici_no,kullanicilar.isim,kullanicilar.soyisim,kullanicilar.dogum.gun,kullanicilar.dogum.ay,kullanicilar.dogum.yıl,kullanicilar.cep_telno,kullanicilar.is_telno,kullanicilar.ev_telno,
+						kullanicilar.mail,kullanicilar.kullanici_adres.il,kullanicilar.kullanici_adres.ilce,kullanicilar.kullanici_adres.cadde,kullanicilar.kullanici_adres.mahalle,kullanicilar.kullanici_adres.sokak,kullanicilar.kullanici_adres.aptno,kullanicilar.kullanici_adres.apartman);
+						printf("||~~~~~~||~~~~~~~~~~~~||~~~~~~~~~~~~~~~~||~~~~~~~~~~~~||~~~~~~~~~~~~~~||~~~~~~~~~~~~~~~~||~~~~~~~~~~~~~~||~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~||~~~~~~~~~~~~~~||~~~~~~~~~~~~~~||~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~||\n");
+				    }
+			    } 
+			}
+			fclose(rehber);
+		}
+        printf("Press any key to back to menu... ");
+	   _getch();
+	    system("cls");
+	}
+	else if(option==3)
+	{
+		char ıd[5];
+		FILE *rehber;
+		rehber=fopen("phonebook.txt","r");
+		if(rehber==NULL)
+		{
+			printf("FILE NOT FOUND!..");
+		}
+		else
+		{
+			printf("Enter the name of the person you want to search: ");
+			_flushall();
+			gets(ıd);
+			if(kullanici_no_kontrol(ıd)==0)
+			{
+				printf("There is no person who is registered with this name!..");
+			}
+			else
+			{
+				printf("||~~~~~~||~~~~~~~~~~~~||~~~~~~~~~~~~~~~~||~~~~~~~~~~~~||~~~~~~~~~~~~~~||~~~~~~~~~~~~~~~~||~~~~~~~~~~~~~~||~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~||~~~~~~~~~~~~~~||~~~~~~~~~~~~~~||~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~||\n");
+				printf("||  ID  ||    NAME    ||    SURNAME     ||  BIRTHDAY  ||  CELLPHONE   || BUSINESS PHONE ||  HOME PHONE  ||          MAIL ADDRESS          ||     CITY     ||    COUNTY    ||                           ADDRESS DETAILS                            ||\n");
+				printf("||~~~~~~||~~~~~~~~~~~~||~~~~~~~~~~~~~~~~||~~~~~~~~~~~~||~~~~~~~~~~~~~~||~~~~~~~~~~~~~~~~||~~~~~~~~~~~~~~||~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~||~~~~~~~~~~~~~~||~~~~~~~~~~~~~~||~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~||\n");
+				while(fscanf(rehber,"%s\n",&kullanicilar.kullanici_no)!=EOF)
+				{
+					fgets(kullanicilar.isim,15,rehber);
+					kullanicilar.isim[strlen(kullanicilar.isim)-1]='\0';
+					fscanf(rehber, "%s\n%d\n%d\n%d\n%s\n%s\n%s\n" ,&kullanicilar.soyisim,&kullanicilar.dogum.gun,&kullanicilar.dogum.ay,&kullanicilar.dogum.yıl,&kullanicilar.is_telno,&kullanicilar.cep_telno,&kullanicilar.ev_telno);
+					fgets(kullanicilar.kullanici_adres.il,15,rehber);
+					kullanicilar.kullanici_adres.il[strlen(kullanicilar.kullanici_adres.il)-1]='\0';
+					fgets(kullanicilar.kullanici_adres.ilce,15,rehber);
+					kullanicilar.kullanici_adres.ilce[strlen(kullanicilar.kullanici_adres.ilce)-1]='\0';
+					fgets(kullanicilar.kullanici_adres.cadde,15,rehber);
+					kullanicilar.kullanici_adres.cadde[strlen(kullanicilar.kullanici_adres.cadde)-1]='\0';
+					fgets(kullanicilar.kullanici_adres.mahalle,15,rehber);
+					kullanicilar.kullanici_adres.mahalle[strlen(kullanicilar.kullanici_adres.mahalle)-1]='\0';
+					fgets(kullanicilar.kullanici_adres.sokak,15,rehber);
+					kullanicilar.kullanici_adres.sokak[strlen(kullanicilar.kullanici_adres.sokak)-1]='\0';
+					fscanf(rehber,"%s\n",&kullanicilar.kullanici_adres.aptno);
+					fgets(kullanicilar.kullanici_adres.apartman,15,rehber);
+					kullanicilar.kullanici_adres.apartman[strlen(kullanicilar.kullanici_adres.apartman)-1]='\0';
+					fscanf(rehber,"%s\n",kullanicilar.mail);
+					if(strcmp(kullanicilar.kullanici_no,ıd)==0)
+					{
+						printf("||%5s ||%11s ||%15s || %2d/%2d/%4d || %12s || %13s  ||%13s ||%31s ||%13s ||%13s || %s %s %s %s %s\n",kullanicilar.kullanici_no,kullanicilar.isim,kullanicilar.soyisim,kullanicilar.dogum.gun,kullanicilar.dogum.ay,kullanicilar.dogum.yıl,kullanicilar.cep_telno,kullanicilar.is_telno,kullanicilar.ev_telno,
+						kullanicilar.mail,kullanicilar.kullanici_adres.il,kullanicilar.kullanici_adres.ilce,kullanicilar.kullanici_adres.cadde,kullanicilar.kullanici_adres.mahalle,kullanicilar.kullanici_adres.sokak,kullanicilar.kullanici_adres.aptno,kullanicilar.kullanici_adres.apartman);
+						printf("||~~~~~~||~~~~~~~~~~~~||~~~~~~~~~~~~~~~~||~~~~~~~~~~~~||~~~~~~~~~~~~~~||~~~~~~~~~~~~~~~~||~~~~~~~~~~~~~~||~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~||~~~~~~~~~~~~~~||~~~~~~~~~~~~~~||~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~||\n");
+				    }
+			    } 
+			}
+			fclose(rehber);
+		}
+        printf("Press any key to back to menu... ");
+	    _getch();
+	    system("cls");
+	}
+	else
+	{
+		printf("Wrong Choice.Try again!\n");
+	}
+}
